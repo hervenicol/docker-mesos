@@ -3,15 +3,15 @@
 #
 # Zookeeper
 #
-# https://hub.docker.com/u/jplock/zookeeper/
+# https://hub.docker.com/r/jplock/zookeeper/
 #
 zk1:
-  image: jplock/zookeeper:3.4.6
+  image: jplock/zookeeper:3.4.7
 
 #
 # Mesos master
 #
-# https://hub.docker.com/u/hervenicol/docker-mesos/
+# https://hub.docker.com/r/hervenicol/docker-mesos/
 # http://mesos.apache.org/documentation/latest/configuration/
 #
 mesos1:
@@ -27,12 +27,11 @@ mesos1:
     MESOS_HOSTNAME: 192.168.1.38
     MESOS_WORK_DIR: /var/lib/mesos
     MESOS_QUORUM: 1
-  #net: "host"
 
 #
 # Mesos slaves
 #
-# https://hub.docker.com/u/hervenicol/docker-mesos/
+# https://hub.docker.com/r/hervenicol/docker-mesos/
 # http://mesos.apache.org/documentation/latest/configuration/
 #
 slave1:
@@ -45,7 +44,6 @@ slave1:
   environment:
     MESOS_MASTER: zk://zookeeper1:2181/mesos
     MESOS_ISOLATOR: "cgroups/cpu,cgroups/mem"
-# installer docker dans le container pour ça
     MESOS_CONTAINERIZERS: "docker,mesos"
     MESOS_EXECUTOR_REGISTRATION_TIMEOUT: "5mins"
     MESOS_HOSTNAME: 192.168.1.38
@@ -96,7 +94,7 @@ slave3:
 #
 # Marathon
 #
-# https://hub.docker.com/u/mesosphere/marathon/
+# https://hub.docker.com/r/mesosphere/marathon/
 #
 marathon:
   image: mesosphere/marathon:v0.13.0
@@ -110,13 +108,13 @@ marathon:
 #
 # Chronos
 #
-# https://hub.docker.com/u/tomaskral/chronos
+# https://hub.docker.com/r/mesosphere/chronos
 #
 chronos:
-  image: tomaskral/chronos:2.3.2-mesos0.21.1
+  image: mesosphere/chronos:chronos-2.4.0-0.1.20151007110204.ubuntu1404-mesos-0.26.0-0.2.145.ubuntu1404
   ports:
     - "4040:8080"
   links:
     - "zk1:zookeeper1"
     - mesos1
-  command: "--master zk://zookeeper1:2181/mesos --zk_hosts zk://zookeeper1:2181/mesos"
+  command: "/usr/bin/chronos --master zk://zookeeper1:2181/mesos --zk_hosts zk://zookeeper1:2181/mesos"
